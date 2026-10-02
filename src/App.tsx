@@ -3,7 +3,6 @@ import {
   Badge,
   Button,
   CopyButton,
-  GraphViewer,
   ToasterProvider,
   toggleThemeReveal,
 } from '@omega-os/ui';
@@ -21,6 +20,7 @@ import {
 } from 'lucide-react';
 import { AttackMatrix } from './components/AttackMatrix';
 import { DetectionLab } from './components/DetectionLab';
+import { KillChain } from './components/KillChain';
 import { KonamiEgg } from './components/KonamiEgg';
 import { ProjectCard } from './components/ProjectCard';
 import { Reveal } from './components/Reveal';
@@ -391,34 +391,9 @@ export default function App() {
                       </a>{' '}
                       RENDERS
                     </span>
-                    <span>selected: {graphNode ?? '-'}</span>
+                    <span>click a stage below</span>
                   </div>
-                  <GraphViewer
-                    selectedId={graphNode}
-                    onSelect={setGraphNode}
-                    nodes={[
-                      { id: 'actor', label: '203.0.113.10', sub: 'attacker ip', group: 'access' },
-                      { id: 'sshd', label: 'SSH brute force', sub: 'T1110', group: 'access' },
-                      { id: 'login', label: 'Login success', sub: 'admin owned', group: 'access' },
-                      { id: 'cron', label: 'Cron persistence', sub: 'T1053.003', group: 'persist' },
-                      { id: 'svc', label: 'Miner service', sub: 'systemd', group: 'persist' },
-                      { id: 'fim', label: 'Payload drop', sub: 'T1222 FIM', group: 'evade' },
-                      { id: 'wipe', label: 'Log wipe', sub: 'T1070', group: 'evade' },
-                      { id: 'kill', label: 'Docker kill wave', sub: 'T1489', group: 'impact' },
-                      { id: 'soc', label: 'Contained', sub: 'SOC-2481', group: 'soc' },
-                    ]}
-                    edges={[
-                      ['actor', 'sshd'],
-                      ['sshd', 'login'],
-                      ['sshd', 'cron'],
-                      ['login', 'svc'],
-                      ['cron', 'fim'],
-                      ['svc', 'wipe'],
-                      ['fim', 'kill'],
-                      ['wipe', 'kill'],
-                      ['kill', 'soc'],
-                    ]}
-                  />
+                  <KillChain selectedId={graphNode} onSelect={setGraphNode} />
                 </div>
               </Reveal>
             </div>
