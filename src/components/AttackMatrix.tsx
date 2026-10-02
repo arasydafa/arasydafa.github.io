@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Badge } from '@omega-os/ui';
-import { Heatmap } from '@omega-os/ui';
+import { StatusMatrix } from './StatusMatrix';
 
 type Status = 'Live' | 'Tuning' | 'Planned';
 
@@ -80,7 +80,11 @@ const DETAILS: TechniqueDetail[] = [
   },
 ];
 
-const VALUE: Record<Status, number> = { Live: 100, Tuning: 55, Planned: 20 };
+const VALUE: Record<Status, 'live' | 'tuning' | 'planned'> = {
+  Live: 'live',
+  Tuning: 'tuning',
+  Planned: 'planned',
+};
 
 const TONE: Record<Status, 'success' | 'info' | 'navy'> = {
   Live: 'success',
@@ -101,12 +105,13 @@ export function AttackMatrix() {
       </p>
       <div className="grid max-w-5xl gap-6 md:grid-cols-[1fr_280px]">
         <div className="max-w-xl">
-          <Heatmap
-            label="Detection coverage by tactic"
-            xLabels={['Credential Access', 'Execution', 'Persistence', 'Defense Evasion', 'Collection', 'Impact']}
-            yLabels={DETAILS.map((d) => d.id)}
-            data={DETAILS.map((d) => ({ x: d.tactic, y: d.id, value: VALUE[d.status] }))}
-            onSelect={(cell) => setSelectedId(cell.y)}
+          <StatusMatrix
+            techniques={DETAILS.map((d) => d.id)}
+            levels={
+              new Map(DETAILS.map((d) => [`${d.tactic}\n${d.id}`, VALUE[d.status]]))
+            }
+            selectedId={selectedId}
+            onSelect={setSelectedId}
           />
         </div>
         <div className="grid content-start gap-4">

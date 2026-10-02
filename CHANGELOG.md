@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.0 — 2026-10-03
+- Vertical kill chain synced to lab stages, two column casefile with sticky chain
+- Log cascade and typewriter analyst notes, stage aware highlights
+- Custom coverage matrix with absolute color scale, clickable cells and side detail
+- Telemetry pipeline skill group, favicon, Blue Team tab title, section icons
+
 ## 1.2.0 — 2026-10-03
 - Five stage detection casefile with analyst notes, technique glossary, and key line highlights
 - Log cascade and typewriter animations, kill chain synced to lab stage
