@@ -89,6 +89,24 @@ function Eyebrow({ index, label }: { index: string; label: string }) {
 export default function App() {
   const [dark, setDark] = useState(false);
   const [graphNode, setGraphNode] = useState<string | null>('kill');
+  const [labStep, setLabStep] = useState(0);
+
+  const handleNodeSelect = (id: string) => {
+    setGraphNode(id);
+    const stage: Record<string, number> = {
+      actor: 0,
+      sshd: 0,
+      login: 0,
+      cron: 1,
+      svc: 1,
+      fim: 1,
+      wipe: 2,
+      kill: 3,
+      soc: 4,
+    };
+    setLabStep(stage[id] ?? 0);
+    document.getElementById('lab')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
   const railRef = useRef<HTMLDivElement>(null);
   const dragState = useRef<{ x: number; scroll: number } | null>(null);
 
@@ -373,27 +391,16 @@ export default function App() {
               </Reveal>
               <Reveal delay={100}>
                 <div className="mt-10">
-                  <DetectionLab />
+                  <DetectionLab step={labStep} onStep={setLabStep} />
                 </div>
               </Reveal>
               <Reveal delay={140}>
                 <div className="mt-10">
                   <div className="mb-2 flex flex-wrap justify-between gap-2 font-mono text-xs text-ot-muted">
-                    <span>
-                      RULE CHAIN PATTERN, LIKE{' '}
-                      <a
-                        href="https://github.com/arasydafa/rulevis"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-navy-text underline underline-offset-2"
-                      >
-                        RULEVIS
-                      </a>{' '}
-                      RENDERS
-                    </span>
-                    <span>click a stage below</span>
+                    <span>KILL CHAIN</span>
+                    <span>click a stage to jump the case above</span>
                   </div>
-                  <KillChain selectedId={graphNode} onSelect={setGraphNode} />
+                  <KillChain selectedId={graphNode} onSelect={handleNodeSelect} />
                 </div>
               </Reveal>
             </div>

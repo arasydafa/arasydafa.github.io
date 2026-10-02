@@ -5,8 +5,7 @@ import { CASE_STEPS } from '../data/placeholder';
 
 // Five stage intrusion: access, persistence, evasion, impact, response.
 // Logs accumulate as the case unfolds. All sample data written fresh.
-export function DetectionLab() {
-  const [step, setStep] = useState(0);
+export function DetectionLab({ step, onStep }: { step: number; onStep: (n: number) => void }) {
   const current = CASE_STEPS[step];
   const shown = CASE_STEPS.slice(0, step + 1).flatMap((s) => s.logs);
 
@@ -24,7 +23,7 @@ export function DetectionLab() {
             variant="secondary"
             icon={<ChevronLeft size={15} />}
             disabled={step === 0}
-            onClick={() => setStep((s) => Math.max(0, s - 1))}
+            onClick={() => onStep(Math.max(0, step - 1))}
           >
             Prev
           </Button>
@@ -33,7 +32,7 @@ export function DetectionLab() {
             variant="secondary"
             icon={<ChevronRight size={15} />}
             disabled={step === CASE_STEPS.length - 1}
-            onClick={() => setStep((s) => Math.min(CASE_STEPS.length - 1, s + 1))}
+            onClick={() => onStep(Math.min(CASE_STEPS.length - 1, step + 1))}
           >
             Next
           </Button>
@@ -44,7 +43,7 @@ export function DetectionLab() {
           <button
             key={s.id}
             type="button"
-            onClick={() => setStep(i)}
+            onClick={() => onStep(i)}
             className={`rounded-full px-3 py-1 font-mono text-xs transition-colors ${
               i === step
                 ? 'bg-navy-bg font-semibold text-navy-text'
