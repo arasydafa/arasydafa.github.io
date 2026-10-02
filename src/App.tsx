@@ -378,35 +378,43 @@ export default function App() {
               </Reveal>
               <Reveal delay={140}>
                 <div className="mt-10">
-                  <p className="mb-2 font-mono text-xs text-ot-muted">
-                    RULE CHAIN PATTERN, LIKE{' '}
-                    <a
-                      href="https://github.com/arasydafa/rulevis"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-navy-text underline underline-offset-2"
-                    >
-                      RULEVIS
-                    </a>{' '}
-                    RENDERS · selected: {graphNode ?? '-'}
-                  </p>
+                  <div className="mb-2 flex flex-wrap justify-between gap-2 font-mono text-xs text-ot-muted">
+                    <span>
+                      RULE CHAIN PATTERN, LIKE{' '}
+                      <a
+                        href="https://github.com/arasydafa/rulevis"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-navy-text underline underline-offset-2"
+                      >
+                        RULEVIS
+                      </a>{' '}
+                      RENDERS
+                    </span>
+                    <span>selected: {graphNode ?? '-'}</span>
+                  </div>
                   <GraphViewer
                     selectedId={graphNode}
                     onSelect={setGraphNode}
                     nodes={[
                       { id: 'actor', label: '203.0.113.10', sub: 'attacker ip', group: 'access' },
                       { id: 'sshd', label: 'SSH brute force', sub: 'T1110', group: 'access' },
+                      { id: 'login', label: 'Login success', sub: 'admin owned', group: 'access' },
                       { id: 'cron', label: 'Cron persistence', sub: 'T1053.003', group: 'persist' },
-                      { id: 'drop', label: 'Payload drop', sub: 'T1222 FIM', group: 'persist' },
+                      { id: 'svc', label: 'Miner service', sub: 'systemd', group: 'persist' },
+                      { id: 'fim', label: 'Payload drop', sub: 'T1222 FIM', group: 'evade' },
                       { id: 'wipe', label: 'Log wipe', sub: 'T1070', group: 'evade' },
                       { id: 'kill', label: 'Docker kill wave', sub: 'T1489', group: 'impact' },
                       { id: 'soc', label: 'Contained', sub: 'SOC-2481', group: 'soc' },
                     ]}
                     edges={[
                       ['actor', 'sshd'],
+                      ['sshd', 'login'],
                       ['sshd', 'cron'],
-                      ['cron', 'drop'],
-                      ['drop', 'wipe'],
+                      ['login', 'svc'],
+                      ['cron', 'fim'],
+                      ['svc', 'wipe'],
+                      ['fim', 'kill'],
                       ['wipe', 'kill'],
                       ['kill', 'soc'],
                     ]}
