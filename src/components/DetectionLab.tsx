@@ -1,10 +1,11 @@
-import { useState } from 'react';
-import { Alert, Badge, Button, CodeBlock, LogViewer } from '@omega-os/ui';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Alert, Badge, Button } from '@omega-os/ui';
+import { ChevronLeft, ChevronRight, Highlighter } from 'lucide-react';
 import { CASE_STEPS } from '../data/placeholder';
+import { CaseLogs, CaseRule, TypeNote } from './CaseViewers';
 
 // Five stage intrusion: access, persistence, evasion, impact, response.
-// Logs accumulate as the case unfolds. All sample data written fresh.
+// Each stage carries an analyst note, a plain language technique glossary,
+// and highlighted key lines. All sample data written fresh.
 export function DetectionLab({ step, onStep }: { step: number; onStep: (n: number) => void }) {
   const current = CASE_STEPS[step];
   const shown = CASE_STEPS.slice(0, step + 1).flatMap((s) => s.logs);
@@ -54,17 +55,17 @@ export function DetectionLab({ step, onStep }: { step: number; onStep: (n: numbe
           </button>
         ))}
       </div>
-      <p className="text-sm text-ot-muted">
-        Stage {step + 1} of {CASE_STEPS.length}: {current.title}. A cryptojacker
-        pattern built from the TTPs I watch daily. Sample data, written fresh.
-      </p>
-      <div className="grid gap-3 md:grid-cols-2">
-        <LogViewer lines={shown} />
-        <CodeBlock language={current.ruleLang} code={current.rule} maxHeight={320} />
+      <p className="text-sm text-ot-muted">{current.techniqueWhy}</p>
+      <div key={current.id} className="case-swap grid gap-3">
+        <Alert tone="info" title="Analyst note." icon={<Highlighter size={18} aria-hidden />}>
+          <TypeNote key={current.id} text={current.note} />
+        </Alert>
+        <CaseLogs lines={shown} keys={current.keyLogs} freshIds={current.logs.map((l) => l.id)} />
+        <CaseRule language={current.ruleLang} code={current.rule} keys={current.keyRule} />
+        <Alert tone={current.alertTone} title={current.alertTitle}>
+          {current.alertText}
+        </Alert>
       </div>
-      <Alert tone={current.alertTone} title={current.alertTitle}>
-        {current.alertText}
-      </Alert>
     </div>
   );
 }

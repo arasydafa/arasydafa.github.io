@@ -11,12 +11,22 @@ import {
   ArrowRight,
   ArrowUp,
   ArrowUpRight,
+  Award,
+  BookOpen,
+  Briefcase,
+  FlaskConical,
   Github,
+  Layers,
   Linkedin,
   Mail,
   Moon,
+  Newspaper,
   Shield,
   Sun,
+  Trophy,
+  User,
+  Wrench,
+  Activity,
 } from 'lucide-react';
 import { AttackMatrix } from './components/AttackMatrix';
 import { DetectionLab } from './components/DetectionLab';
@@ -78,9 +88,10 @@ function CountUp({ to, suffix = '' }: { to: number; suffix?: string }) {
   );
 }
 
-function Eyebrow({ index, label }: { index: string; label: string }) {
+function Eyebrow({ index, label, icon }: { index: string; label: string; icon: React.ReactNode }) {
   return (
-    <p className="font-mono text-xs tracking-widest text-ot-muted">
+    <p className="flex items-center gap-2 font-mono text-xs tracking-widest text-ot-muted">
+      <span className="text-navy-text">{icon}</span>
       {index} / {label}
     </p>
   );
@@ -88,11 +99,17 @@ function Eyebrow({ index, label }: { index: string; label: string }) {
 
 export default function App() {
   const [dark, setDark] = useState(false);
-  const [graphNode, setGraphNode] = useState<string | null>('kill');
   const [labStep, setLabStep] = useState(0);
 
+  const STAGE_NODES: string[][] = [
+    ['actor', 'sshd', 'login'],
+    ['cron', 'svc', 'fim'],
+    ['wipe'],
+    ['kill'],
+    ['soc'],
+  ];
+
   const handleNodeSelect = (id: string) => {
-    setGraphNode(id);
     const stage: Record<string, number> = {
       actor: 0,
       sshd: 0,
@@ -175,7 +192,7 @@ export default function App() {
           <section id="about" className="w-full scroll-mt-20 border-t border-ot-border">
             <div className="mx-auto grid w-full max-w-7xl gap-8 px-6 py-20 md:grid-cols-[1fr_1.4fr] md:px-10 md:py-28">
               <Reveal>
-                <Eyebrow index="01" label="OPERATOR" />
+                <Eyebrow index="01" label="OPERATOR" icon={<User size={13} />} />
                 <h2 className="mt-3 text-4xl font-extrabold tracking-tight md:text-5xl">
                   Blue team,
                   <br />
@@ -205,7 +222,7 @@ export default function App() {
               <Reveal>
                 <div className="flex flex-wrap items-end justify-between gap-4">
                   <div>
-                    <Eyebrow index="02" label="SERVICE RECORD" />
+                    <Eyebrow index="02" label="SERVICE RECORD" icon={<Briefcase size={13} />} />
                     <h2 className="mt-3 text-4xl font-extrabold tracking-tight md:text-6xl">
                       Service
                       <br />
@@ -286,7 +303,7 @@ export default function App() {
           <section id="work" className="w-full scroll-mt-20 border-t border-ot-border">
             <div className="mx-auto w-full max-w-7xl px-6 py-20 md:px-10 md:py-28">
               <Reveal>
-                <Eyebrow index="03" label="FIELDWORK" />
+                <Eyebrow index="03" label="FIELDWORK" icon={<Layers size={13} />} />
                 <h2 className="mt-3 text-4xl font-extrabold tracking-tight md:text-6xl">
                   Pulled from
                   <br />
@@ -310,7 +327,7 @@ export default function App() {
           <section id="skills" className="w-full scroll-mt-20 border-t border-ot-border bg-ot-surface">
             <div className="mx-auto w-full max-w-7xl px-6 py-20 md:px-10 md:py-28">
               <Reveal>
-                <Eyebrow index="04" label="ARSENAL" />
+                <Eyebrow index="04" label="ARSENAL" icon={<Wrench size={13} />} />
                 <h2 className="mt-3 text-4xl font-extrabold tracking-tight md:text-6xl">
                   The working
                   <br />
@@ -345,7 +362,7 @@ export default function App() {
           <section id="metrics" className="w-full scroll-mt-20 border-t border-ot-border">
             <div className="mx-auto w-full max-w-7xl px-6 py-20 md:px-10 md:py-28">
               <Reveal>
-                <Eyebrow index="05" label="SIGNAL" />
+                <Eyebrow index="05" label="SIGNAL" icon={<Activity size={13} />} />
                 <h2 className="mt-3 text-4xl font-extrabold tracking-tight md:text-6xl">
                   Signal, not
                   <br />
@@ -377,7 +394,7 @@ export default function App() {
           <section id="lab" className="w-full scroll-mt-20 border-t border-ot-border bg-ot-surface">
             <div className="mx-auto w-full max-w-7xl px-6 py-20 md:px-10 md:py-28">
               <Reveal>
-                <Eyebrow index="06" label="CASEFILE" />
+                <Eyebrow index="06" label="CASEFILE" icon={<FlaskConical size={13} />} />
                 <h2 className="mt-3 text-4xl font-extrabold tracking-tight md:text-6xl">
                   One case,
                   <br />
@@ -398,7 +415,7 @@ export default function App() {
                       <span>KILL CHAIN</span>
                       <span>click to jump stage</span>
                     </div>
-                    <KillChain selectedId={graphNode} onSelect={handleNodeSelect} />
+                    <KillChain activeIds={STAGE_NODES[labStep]} onSelect={handleNodeSelect} />
                   </div>
                 </Reveal>
               </div>
@@ -409,7 +426,7 @@ export default function App() {
           <section id="writeups" className="w-full scroll-mt-20 border-t border-ot-border">
             <div className="mx-auto w-full max-w-7xl px-6 py-20 md:px-10 md:py-28">
               <Reveal>
-                <Eyebrow index="07" label="DISPATCHES" />
+                <Eyebrow index="07" label="DISPATCHES" icon={<Newspaper size={13} />} />
                 <h2 className="mt-3 text-4xl font-extrabold tracking-tight md:text-6xl">
                   Notes from
                   <br />
@@ -453,7 +470,7 @@ export default function App() {
           <section id="ctf" className="w-full scroll-mt-20 border-t border-ot-border bg-ot-surface">
             <div className="mx-auto w-full max-w-7xl px-6 py-20 md:px-10 md:py-28">
               <Reveal>
-                <Eyebrow index="08" label="CHALLENGE WORK" />
+                <Eyebrow index="08" label="CHALLENGE WORK" icon={<Trophy size={13} />} />
                 <h2 className="mt-3 text-4xl font-extrabold tracking-tight md:text-6xl">
                   Built to
                   <br />
@@ -495,7 +512,7 @@ export default function App() {
           <section id="publications" className="w-full scroll-mt-20 border-t border-ot-border">
             <div className="mx-auto w-full max-w-7xl px-6 py-20 md:px-10 md:py-28">
               <Reveal>
-                <Eyebrow index="09" label="PUBLICATIONS" />
+                <Eyebrow index="09" label="PUBLICATIONS" icon={<BookOpen size={13} />} />
                 <h2 className="mt-3 text-4xl font-extrabold tracking-tight md:text-6xl">
                   Published
                   <br />
@@ -545,7 +562,7 @@ export default function App() {
           <section id="certs" className="w-full scroll-mt-20 border-t border-ot-border bg-ot-surface">
             <div className="mx-auto w-full max-w-7xl px-6 py-20 md:px-10 md:py-28">
               <Reveal>
-                <Eyebrow index="10" label="CREDENTIALS" />
+                <Eyebrow index="10" label="CREDENTIALS" icon={<Award size={13} />} />
                 <h2 className="mt-3 text-4xl font-extrabold tracking-tight md:text-6xl">
                   Stamped
                   <br />

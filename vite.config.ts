@@ -24,7 +24,7 @@ export default defineConfig({
   server: {
     fs: {
       // Linked `file:` packages live outside the project root.
-      allow: [uiRealDir],
+      allow: [process.cwd(), uiRealDir],
     },
   },
 });

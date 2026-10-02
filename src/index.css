@@ -106,6 +106,38 @@ html {
   animation: ot-ticker 32s linear infinite;
 }
 
+/* Stage swap — remounts per stage via React key. */
+@keyframes ot-case-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.case-swap {
+  animation: ot-case-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Staggered row entrance for case viewers. Ends without opacity so the
+   row keeps its own dim state after the animation finishes. */
+@keyframes ot-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.case-row {
+  animation: ot-row-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
 /* Hide scrollbars on horizontal snap rails */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
@@ -121,6 +153,13 @@ html {
   }
   .ticker-track {
     animation: none;
+  }
+  .case-swap {
+    animation: none;
+  }
+  .case-row {
+    animation: none;
+    opacity: 1;
   }
   .ot-reveal {
     opacity: 1;

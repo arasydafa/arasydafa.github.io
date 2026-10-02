@@ -6,29 +6,29 @@ export interface ChainNode {
 }
 
 const NODES: ChainNode[] = [
-  { id: 'actor', label: '203.0.113.10', sub: 'Attacker ip', technique: '—' },
-  { id: 'sshd', label: 'SSH brute force', sub: '42 tries then success', technique: 'T1110' },
-  { id: 'login', label: 'Login success', sub: 'Admin account owned', technique: 'T1110' },
-  { id: 'cron', label: 'Cron persistence', sub: 'Rogue entry in /etc/cron.d', technique: 'T1053.003' },
-  { id: 'svc', label: 'Miner service', sub: 'rogue systemd unit', technique: 'T1543' },
-  { id: 'fim', label: 'Payload drop', sub: 'New binary, hash drift', technique: 'T1222' },
-  { id: 'wipe', label: 'Log wipe', sub: 'auth.log truncated', technique: 'T1070' },
-  { id: 'kill', label: 'Docker kill wave', sub: '6 containers in 40s', technique: 'T1489' },
-  { id: 'soc', label: 'Contained', sub: 'Ticket SOC-2481', technique: 'IR' },
+  { id: 'actor', label: '203.0.113.10', sub: 'Attacker ip', technique: 'Source' },
+  { id: 'sshd', label: 'SSH brute force', sub: '42 tries then success', technique: 'T1110 Brute Force' },
+  { id: 'login', label: 'Login success', sub: 'Admin account owned', technique: 'T1078 Valid Account' },
+  { id: 'cron', label: 'Cron persistence', sub: 'Rogue entry in /etc/cron.d', technique: 'T1053 Scheduled Task' },
+  { id: 'svc', label: 'Miner service', sub: 'rogue systemd unit', technique: 'T1543 System Process' },
+  { id: 'fim', label: 'Payload drop', sub: 'New binary, hash drift', technique: 'T1222 File Permissions' },
+  { id: 'wipe', label: 'Log wipe', sub: 'auth.log truncated', technique: 'T1070 Indicator Removal' },
+  { id: 'kill', label: 'Docker kill wave', sub: '6 containers in 40s', technique: 'T1489 Service Stop' },
+  { id: 'soc', label: 'Contained', sub: 'Ticket SOC-2481', technique: 'IR Response' },
 ];
 
-// Vertical kill chain. Flat editorial style, no canvas, no width problem.
+// Vertical kill chain. Nodes in the current stage light up, synced from the lab.
 export function KillChain({
-  selectedId,
+  activeIds,
   onSelect,
 }: {
-  selectedId: string | null;
+  activeIds: string[];
   onSelect: (id: string) => void;
 }) {
   return (
     <ol className="grid gap-0">
       {NODES.map((n, i) => {
-        const active = selectedId === n.id;
+        const active = activeIds.includes(n.id);
         return (
           <li key={n.id} className="relative flex gap-3 pb-4 last:pb-0">
             {i < NODES.length - 1 ? (
@@ -39,7 +39,7 @@ export function KillChain({
               onClick={() => onSelect(n.id)}
               aria-label={`${n.label}, ${n.technique}`}
               className={`z-10 mt-1 grid h-4 w-4 shrink-0 place-items-center rounded-full transition-colors ${
-                active ? 'bg-navy' : 'bg-ot-surface-2 hover:bg-navy'
+                active ? 'animate-pulse bg-navy' : 'bg-ot-surface-2 hover:bg-navy'
               }`}
             />
             <button

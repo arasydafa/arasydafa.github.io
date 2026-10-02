@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0 — 2026-10-03
+- Five stage detection casefile with analyst notes, technique glossary, and key line highlights
+- Log cascade and typewriter animations, kill chain synced to lab stage
+- Two column casefile with sticky kill chain, vertical chain replaces wide graph
+- Interactive ATT&CK matrix with Live, Tuning, and Planned statuses plus detail panel
+- Telemetry pipeline skill group, favicon and Blue Team tab title, section icons
+- Real resume content across experience, publications, credentials, and challenge work
+
 ## 1.1.0 — 2026-10-02
 - Portable Vite/Tailwind config, no machine specific paths
 - GitHub Pages deploy via Actions (portfolio + omega-os checkouts)

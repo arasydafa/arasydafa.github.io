@@ -86,6 +86,12 @@ export const SKILL_GROUPS = [
     items: ['Alibaba Cloud', 'AWS', 'GCP', 'Docker', 'Kubernetes', 'Linux (Ubuntu, Kali)'],
   },
   {
+    id: 'g6',
+    title: 'Telemetry pipeline',
+    desc: 'Ship, buffer, store, and keep it searchable.',
+    items: ['OpenSearch', 'Vector', 'Redis', 'PostgreSQL', 'Log forwarding', 'Ingestion pipelines', 'Index policies', 'Snapshots'],
+  },
+  {
     id: 'g3',
     title: 'Automation',
     desc: 'Pipelines and infra-as-code for security work.',
@@ -233,6 +239,10 @@ export interface CaseStep {
   id: string;
   title: string;
   technique: string;
+  techniqueWhy: string;
+  note: string;
+  keyLogs: string[];
+  keyRule: string[];
   logs: { id: string; level: 'info' | 'warn' | 'error' | 'success'; time: string; text: string }[];
   ruleLang: string;
   rule: string;
@@ -248,6 +258,10 @@ export const CASE_STEPS: CaseStep[] = [
     id: 's1',
     title: 'Initial access',
     technique: 'T1110',
+    techniqueWhy: 'T1110 Brute Force means guessing passwords over and over until one works.',
+    note: 'Watch the count, not the failures. 42 tries in 5 minutes from one IP, then a success. That success is the whole case.',
+    keyLogs: ['42 tries', 'Accepted password'],
+    keyRule: ['count(SourceIp)', 'attack.t1110'],
     logs: [
       { id: 'l1', level: 'info', time: '10:01', text: 'sshd[412]: Connection from 203.0.113.10 (sample log)' },
       { id: 'l2', level: 'warn', time: '10:02', text: 'sshd[412]: Failed password for invalid user admin from 203.0.113.10' },
@@ -278,6 +292,10 @@ tags:
     id: 's2',
     title: 'Persistence',
     technique: 'T1053.003',
+    techniqueWhy: 'T1053.003 Cron means abusing the system scheduler so malware reruns itself.',
+    note: 'Cron written outside the package manager plus a service that never existed. Two footholds in the same minute.',
+    keyLogs: ['cron.d', 'miner.service'],
+    keyRule: ['TargetFilename', 'attack.t1053'],
     logs: [
       { id: 'l4', level: 'warn', time: '10:09', text: 'cron: new entry in /etc/cron.d/ written by uid 0 outside package manager' },
       { id: 'l5', level: 'warn', time: '10:09', text: 'systemd[1]: Started rogue miner service (miner.service)' },
@@ -307,6 +325,10 @@ tags:
     id: 's3',
     title: 'Defense evasion',
     technique: 'T1070',
+    techniqueWhy: 'T1070 Indicator Removal means deleting logs to blind defenders.',
+    note: 'Auth log zeroed and 11 minutes of telemetry gone. From here every timestamp is hostile.',
+    keyLogs: ['zero bytes', 'missing'],
+    keyRule: ['truncate', 'attack.t1070'],
     logs: [
       { id: 'l7', level: 'warn', time: '10:14', text: 'auditd: /var/log/auth.log truncated to zero bytes by uid 0' },
       { id: 'l8', level: 'warn', time: '10:14', text: 'auditd: history file of admin account cleared in same minute' },
@@ -335,6 +357,10 @@ tags:
     id: 's4',
     title: 'Impact',
     technique: 'T1489',
+    techniqueWhy: 'T1489 Service Stop means killing workloads to steal their resources.',
+    note: 'Six containers killed in 40 seconds while CPU pins at max. The miner is clearing the room for itself.',
+    keyLogs: ['kill signal', '100 percent'],
+    keyRule: ['count(ContainerId)', 'attack.t1489'],
     logs: [
       { id: 'l10', level: 'warn', time: '10:21', text: 'dockerd: container web-1 received kill signal from host shell' },
       { id: 'l11', level: 'warn', time: '10:21', text: 'dockerd: container db-1 received kill signal from host shell' },
@@ -363,6 +389,10 @@ tags:
     id: 's5',
     title: 'Respond and contain',
     technique: 'IR',
+    techniqueWhy: 'IR means containment before eradication, evidence before rebuild.',
+    note: 'Block, isolate, rotate, rebuild. Order matters and evidence comes first.',
+    keyLogs: ['blocked', 'closed'],
+    keyRule: ['DROP', 'rebuild'],
     logs: [
       { id: 'l13', level: 'info', time: '10:30', text: 'soar: 203.0.113.10 blocked at edge firewall' },
       { id: 'l14', level: 'info', time: '10:31', text: 'soar: host isolated from production network, snapshot taken' },
