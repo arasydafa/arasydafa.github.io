@@ -105,7 +105,6 @@ export default function App() {
       soc: 4,
     };
     setLabStep(stage[id] ?? 0);
-    document.getElementById('lab')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
   const railRef = useRef<HTMLDivElement>(null);
   const dragState = useRef<{ x: number; scroll: number } | null>(null);
@@ -389,20 +388,20 @@ export default function App() {
                   sanitized real case when ready.
                 </p>
               </Reveal>
-              <Reveal delay={100}>
-                <div className="mt-10">
+              <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_300px]">
+                <Reveal delay={100}>
                   <DetectionLab step={labStep} onStep={setLabStep} />
-                </div>
-              </Reveal>
-              <Reveal delay={140}>
-                <div className="mt-10">
-                  <div className="mb-2 flex flex-wrap justify-between gap-2 font-mono text-xs text-ot-muted">
-                    <span>KILL CHAIN</span>
-                    <span>click a stage to jump the case above</span>
+                </Reveal>
+                <Reveal delay={140}>
+                  <div className="lg:sticky lg:top-24">
+                    <div className="mb-2 flex flex-wrap justify-between gap-2 font-mono text-xs text-ot-muted">
+                      <span>KILL CHAIN</span>
+                      <span>click to jump stage</span>
+                    </div>
+                    <KillChain selectedId={graphNode} onSelect={handleNodeSelect} />
                   </div>
-                  <KillChain selectedId={graphNode} onSelect={handleNodeSelect} />
-                </div>
-              </Reveal>
+                </Reveal>
+              </div>
             </div>
           </section>
 
