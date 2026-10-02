@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.0 — 2026-10-03
+- Section navigation: command palette, dot rail with hover labels, footer sitemap
+- Cloudflare Web Analytics, telemetry and governance skill updates
+- Absolute scale coverage matrix with technique names and side detail
+- Kill chain and lab refinements, Blue Team tab title and favicon
+
 ## 1.3.0 — 2026-10-03
 - Vertical kill chain synced to lab stages, two column casefile with sticky chain
 - Log cascade and typewriter analyst notes, stage aware highlights

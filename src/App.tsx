@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import {
   Badge,
   Button,
+  CommandPalette,
   CopyButton,
   ToasterProvider,
   toggleThemeReveal,
@@ -21,6 +22,7 @@ import {
   Mail,
   Moon,
   Newspaper,
+  Search,
   Shield,
   Sun,
   Trophy,
@@ -30,6 +32,7 @@ import {
 } from 'lucide-react';
 import { AttackMatrix } from './components/AttackMatrix';
 import { DetectionLab } from './components/DetectionLab';
+import { DotRail } from './components/DotRail';
 import { KillChain } from './components/KillChain';
 import { KonamiEgg } from './components/KonamiEgg';
 import { ProjectCard } from './components/ProjectCard';
@@ -44,6 +47,20 @@ const NAV = [
   { id: 'about', label: 'About' },
   { id: 'work', label: 'Work' },
   { id: 'lab', label: 'Lab' },
+  { id: 'contact', label: 'Contact' },
+];
+
+const ALL_SECTIONS = [
+  { id: 'about', label: 'About' },
+  { id: 'experience', label: 'Service Record' },
+  { id: 'work', label: 'Fieldwork' },
+  { id: 'skills', label: 'Arsenal' },
+  { id: 'metrics', label: 'Signal' },
+  { id: 'lab', label: 'Casefile' },
+  { id: 'writeups', label: 'Dispatches' },
+  { id: 'ctf', label: 'Challenge Work' },
+  { id: 'publications', label: 'Publications' },
+  { id: 'certs', label: 'Credentials' },
   { id: 'contact', label: 'Contact' },
 ];
 
@@ -100,6 +117,7 @@ function Eyebrow({ index, label, icon }: { index: string; label: string; icon: R
 export default function App() {
   const [dark, setDark] = useState(false);
   const [labStep, setLabStep] = useState(0);
+  const [paletteOpen, setPaletteOpen] = useState(false);
 
   const STAGE_NODES: string[][] = [
     ['actor', 'sshd', 'login'],
@@ -136,7 +154,21 @@ export default function App() {
     });
   };
 
-  const go = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  const go = (id: string) => {
+    setPaletteOpen(false);
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setPaletteOpen((v) => !v);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
   const slideRail = (dir: 1 | -1) =>
     railRef.current?.scrollBy({ left: dir * 360, behavior: 'smooth' });
 
@@ -167,6 +199,15 @@ export default function App() {
               ))}
             </nav>
             <span className="ml-auto flex items-center gap-2 md:ml-0">
+              <button
+                type="button"
+                onClick={() => setPaletteOpen(true)}
+                aria-label="Jump to section (Ctrl K)"
+                title="Jump to section (Ctrl K)"
+                className="grid h-8 w-8 place-items-center rounded-full border border-ot-border text-ot-muted transition-colors hover:text-ot-text"
+              >
+                <Search size={15} />
+              </button>
               <button
                 type="button"
                 onClick={toggleTheme}
@@ -673,7 +714,21 @@ export default function App() {
           </section>
 
           <footer className="w-full border-t border-ot-border">
-            <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-3 px-6 py-6 font-mono text-xs text-ot-muted md:px-10">
+            <div className="mx-auto w-full max-w-7xl px-6 py-10 md:px-10">
+              <nav aria-label="Sitemap" className="flex flex-wrap gap-x-5 gap-y-2 font-mono text-xs text-ot-muted">
+                {ALL_SECTIONS.map((s) => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => go(s.id)}
+                    className="transition-colors hover:text-navy-text"
+                  >
+                    {s.label}
+                  </button>
+                ))}
+              </nav>
+            </div>
+            <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-3 border-t border-ot-border px-6 py-6 font-mono text-xs text-ot-muted md:px-10">
               <span>© 2026 {PROFILE.handle} · v{pkg.version}</span>
               <span className="ml-auto inline-flex items-center gap-2">
                 STACK · REACT · VITE · @OMEGA-OS/UI
@@ -690,6 +745,23 @@ export default function App() {
           </footer>
         </main>
         <ScrollBuddy />
+        <DotRail sections={ALL_SECTIONS} onJump={go} />
+        <CommandPalette
+          open={paletteOpen}
+          onOpenChange={setPaletteOpen}
+          placeholder="Jump to a section…"
+          items={[
+            ...ALL_SECTIONS.map((s) => ({
+              id: s.id,
+              label: s.label,
+              group: 'Sections',
+              onSelect: () => go(s.id),
+            })),
+            { id: 'github', label: 'GitHub', group: 'Elsewhere', onSelect: () => window.open(PROFILE.github, '_blank') },
+            { id: 'medium', label: 'Medium', group: 'Elsewhere', onSelect: () => window.open(PROFILE.medium, '_blank') },
+            { id: 'linkedin', label: 'LinkedIn', group: 'Elsewhere', onSelect: () => window.open(PROFILE.linkedin, '_blank') },
+          ]}
+        />
       </div>
     </ToasterProvider>
   );

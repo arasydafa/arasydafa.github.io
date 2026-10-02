@@ -83,7 +83,7 @@ export const SKILL_GROUPS = [
     id: 'g2',
     title: 'Cloud & infrastructure',
     desc: 'Posture management across clouds and containers.',
-    items: ['Alibaba Cloud', 'AWS', 'GCP', 'Docker', 'Kubernetes', 'Linux (Ubuntu, Kali)'],
+    items: ['Alibaba Cloud', 'AWS', 'GCP', 'Cloudflare', 'ZTNA', 'Docker', 'Kubernetes', 'Linux (Ubuntu, Kali)'],
   },
   {
     id: 'g6',
@@ -107,7 +107,7 @@ export const SKILL_GROUPS = [
     id: 'g5',
     title: 'Governance',
     desc: 'Controls, compliance, and least privilege.',
-    items: ['IAM', 'PAM', 'ISO 27001', 'PCI-DSS', 'Risk & Governance'],
+    items: ['IAM', 'PAM', 'Least Privilege', 'ISO 27001', 'PCI-DSS', 'Risk & Governance'],
   },
 ];
 
