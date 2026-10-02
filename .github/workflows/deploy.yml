@@ -1,0 +1,59 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout portfolio
+        uses: actions/checkout@v4
+        with:
+          path: Personal/portfolio
+      - name: Checkout omega-os design system
+        uses: actions/checkout@v4
+        with:
+          repository: arasydafa/omega-os
+          path: Project/omega-os
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Build omega-os dist
+        run: |
+          npm install --no-audit --no-fund
+          npm run build
+        working-directory: Project/omega-os
+      - name: Install portfolio
+        run: npm install --no-audit --no-fund
+        working-directory: Personal/portfolio
+      - name: Build portfolio
+        run: npm run build
+        working-directory: Personal/portfolio
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: Personal/portfolio/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

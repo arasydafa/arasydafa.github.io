@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "types": ["react", "react-dom", "vite/client", "node"],
+    "baseUrl": ".",
+    "paths": {
+      "@omega-os/ui": ["../../Project/omega-os/src/index.ts"]
+    }
+  },
+  "include": ["src", "vite.config.ts"]
+}
