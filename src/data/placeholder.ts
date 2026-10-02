@@ -132,6 +132,65 @@ export const CHALLENGE_WORK = [
   },
 ];
 
+export const SUBJECTS = [
+  'Linux Fundamental',
+  'Kali Linux Basics and Operations',
+  'System and Server Management in Kali',
+  'Security Governance and Compliance',
+  'Identifying Vulnerabilities',
+  'Vulnerable and Outdated Components',
+  'Security Misconfiguration',
+  'Software and Data Integrity Failures',
+  'Intro to Security Analyst Role',
+  'Log Collection and SIEM Monitoring',
+  'Threat Detection and Behavioral Analytics',
+  'Server and Network Security',
+  'Network Traffic Analysis for Detection',
+  'Endpoint Security and Log Analysis',
+  'Threat Detection with NIDS',
+  'Incident Response',
+  'Digital Forensics',
+  'Python Fundamental',
+  'Identity and Access Management',
+  'Network Security Architecture',
+  'Security Architecture and Threat Modeling',
+  'Security Automation',
+  'Cloud Security Best Practices',
+];
+
+export const TEACH_TOOLS = [
+  'Kali Linux',
+  'Nmap',
+  'Nikto',
+  'Metasploit',
+  'Burp Suite',
+  'Wireshark',
+  'OWASP Dependency-Check',
+  'GCP',
+  'Snyk',
+  'Wazuh',
+  'AWS',
+  'Ansible',
+];
+
+export const SPEAKING = [
+  {
+    id: 'sp-mikroskil',
+    event: 'Universitas Mikroskil Medan',
+    meta: 'Guest Lecture · Blue Team Report Writing',
+  },
+  {
+    id: 'sp-ionic',
+    event: 'IONIC 2026',
+    meta: 'Webinar · Cloud Security',
+  },
+  {
+    id: 'sp-ocbc',
+    event: 'OCBC Digital Youth Program 2026',
+    meta: 'Speaker · Cyber Security',
+  },
+];
+
 export const PUBLICATIONS = [
   {
     id: 'pub-1',

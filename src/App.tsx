@@ -17,6 +17,7 @@ import {
   Briefcase,
   FlaskConical,
   Github,
+  GraduationCap,
   Layers,
   Linkedin,
   Mail,
@@ -40,7 +41,7 @@ import { Reveal } from './components/Reveal';
 import { ScrollBuddy, ScrollProgress } from './components/ScrollBuddy';
 import { TerminalHero } from './components/TerminalHero';
 import { Ticker } from './components/Ticker';
-import { ABOUT_SUMMARY, CERTS, CHALLENGE_WORK, COURSES, EXPERIENCE, PROFILE, PROJECTS, PUBLICATIONS, SKILL_GROUPS, WRITEUPS } from './data/placeholder';
+import { ABOUT_SUMMARY, CERTS, CHALLENGE_WORK, COURSES, EXPERIENCE, PROFILE, PROJECTS, PUBLICATIONS, SKILL_GROUPS, SPEAKING, SUBJECTS, TEACH_TOOLS, WRITEUPS } from './data/placeholder';
 import pkg from '../package.json';
 
 const NAV = [
@@ -59,6 +60,7 @@ const ALL_SECTIONS = [
   { id: 'lab', label: 'Casefile' },
   { id: 'writeups', label: 'Dispatches' },
   { id: 'ctf', label: 'Challenge Work' },
+  { id: 'classroom', label: 'Classroom' },
   { id: 'publications', label: 'Publications' },
   { id: 'certs', label: 'Credentials' },
   { id: 'contact', label: 'Contact' },
@@ -549,11 +551,54 @@ export default function App() {
             </div>
           </section>
 
-          {/* 09 — PUBLICATIONS */}
+          {/* 09 — CLASSROOM */}
+          <section id="classroom" className="w-full scroll-mt-20 border-t border-ot-border bg-ot-surface">
+            <div className="mx-auto w-full max-w-7xl px-6 py-20 md:px-10 md:py-28">
+              <Reveal>
+                <Eyebrow index="09" label="CLASSROOM" icon={<GraduationCap size={13} />} />
+                <h2 className="mt-3 text-4xl font-extrabold tracking-tight md:text-6xl">
+                  Those
+                  <br />I teach.
+                </h2>
+                <p className="mt-4 max-w-xl text-[15px] text-ot-muted">
+                  Mentor at dibimbing.id plus guest stages. Teaching 23 subjects across
+                  Linux, blue team ops, and cloud security.
+                </p>
+              </Reveal>
+              <div className="mt-6 divide-y divide-ot-border border-y border-ot-border">
+                {SPEAKING.map((s, i) => (
+                  <Reveal key={s.id} delay={Math.min(i * 80, 160)}>
+                    <div className="flex items-baseline gap-4 py-4">
+                      <span className="font-mono text-sm text-ot-muted">0{i + 1}</span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-lg font-bold tracking-tight">{s.event}</span>
+                        <span className="mt-0.5 block font-mono text-xs text-ot-muted">{s.meta}</span>
+                      </span>
+                    </div>
+                  </Reveal>
+                ))}
+              </div>
+              <Reveal delay={100}>
+                <div className="mt-10 grid gap-x-8 md:grid-cols-2">
+                  {SUBJECTS.map((s, i) => (
+                    <p key={s} className="border-b border-ot-border py-2 font-mono text-[13px]">
+                      <span className="mr-3 text-ot-muted">{String(i + 1).padStart(2, '0')}</span>
+                      {s}
+                    </p>
+                  ))}
+                </div>
+                <p className="mt-6 font-mono text-xs leading-6 tracking-widest text-ot-muted">
+                  LAB TOOLS · {TEACH_TOOLS.join(' · ').toUpperCase()}
+                </p>
+              </Reveal>
+            </div>
+          </section>
+
+          {/* 10 — PUBLICATIONS */}
           <section id="publications" className="w-full scroll-mt-20 border-t border-ot-border">
             <div className="mx-auto w-full max-w-7xl px-6 py-20 md:px-10 md:py-28">
               <Reveal>
-                <Eyebrow index="09" label="PUBLICATIONS" icon={<BookOpen size={13} />} />
+                <Eyebrow index="10" label="PUBLICATIONS" icon={<BookOpen size={13} />} />
                 <h2 className="mt-3 text-4xl font-extrabold tracking-tight md:text-6xl">
                   Published
                   <br />
@@ -599,11 +644,11 @@ export default function App() {
             </div>
           </section>
 
-          {/* 10 — CREDENTIALS */}
+          {/* 11 — CREDENTIALS */}
           <section id="certs" className="w-full scroll-mt-20 border-t border-ot-border bg-ot-surface">
             <div className="mx-auto w-full max-w-7xl px-6 py-20 md:px-10 md:py-28">
               <Reveal>
-                <Eyebrow index="10" label="CREDENTIALS" icon={<Award size={13} />} />
+                <Eyebrow index="11" label="CREDENTIALS" icon={<Award size={13} />} />
                 <h2 className="mt-3 text-4xl font-extrabold tracking-tight md:text-6xl">
                   Stamped
                   <br />
@@ -673,11 +718,11 @@ export default function App() {
             </div>
           </section>
 
-          {/* 11 — CONTACT */}
+          {/* 12 — CONTACT */}
           <section id="contact" className="w-full scroll-mt-20 border-t border-ot-border bg-navy text-white">
             <div className="mx-auto w-full max-w-7xl px-6 py-20 md:px-10 md:py-28">
               <Reveal>
-                <p className="font-mono text-xs tracking-widest opacity-70">11 / OPEN CHANNEL</p>
+                <p className="font-mono text-xs tracking-widest opacity-70">12 / OPEN CHANNEL</p>
                 <h2 className="mt-3 text-4xl font-extrabold tracking-tight md:text-7xl">
                   Open a<br />
                   <span className="font-light italic">channel.</span>

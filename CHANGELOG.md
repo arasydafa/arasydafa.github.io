@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.0 — 2026-10-03
+- Classroom section with speaking stages, 23 subjects, and lab tools
+- Dot rail hover labels with dark band adaptation
+
 ## 1.4.0 — 2026-10-03
 - Section navigation: command palette, dot rail with hover labels, footer sitemap
 - Cloudflare Web Analytics, telemetry and governance skill updates
