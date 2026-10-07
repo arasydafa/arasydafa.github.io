@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.5.1 — 2026-10-07
+- SEO meta and Open Graph share image, robots.txt, sitemap.xml
+
 ## 1.5.0 — 2026-10-03
 - Classroom section with speaking stages, 23 subjects, and lab tools
 - Dot rail hover labels with dark band adaptation
