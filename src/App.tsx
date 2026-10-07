@@ -135,7 +135,16 @@ function WibClock() {
 }
 
 export default function App() {
-  const [dark, setDark] = useState(false);
+  const [dark, setDark] = useState(() => {
+    try {
+      const saved = localStorage.getItem('ot-theme');
+      if (saved) return saved === 'dark';
+    } catch {
+      // Private mode. Fall through to night shift default.
+    }
+    const h = new Date().getHours();
+    return h >= 18 || h < 6;
+  });
   const [labStep, setLabStep] = useState(0);
   const [paletteOpen, setPaletteOpen] = useState(false);
 
@@ -164,6 +173,12 @@ export default function App() {
   const railRef = useRef<HTMLDivElement>(null);
   const dragState = useRef<{ x: number; scroll: number } | null>(null);
 
+  // Apply the initial theme once. Manual toggles afterwards persist the choice.
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', dark);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const toggleTheme = (e: React.MouseEvent<HTMLButtonElement>) => {
     const x = e.clientX || window.innerWidth - 60;
     const y = e.clientY || 40;
@@ -171,6 +186,11 @@ export default function App() {
       const next = !dark;
       setDark(next);
       document.documentElement.classList.toggle('dark', next);
+      try {
+        localStorage.setItem('ot-theme', next ? 'dark' : 'light');
+      } catch {
+        // Private mode. Theme just resets next visit.
+      }
     });
   };
 
@@ -466,7 +486,7 @@ export default function App() {
                   sanitized real case when ready.
                 </p>
               </Reveal>
-              <div className="mt-10 grid cursor-crosshair gap-10 lg:grid-cols-[1fr_300px]">
+              <div className="mt-10 grid cursor-none gap-10 lg:grid-cols-[1fr_300px] [&_button]:cursor-pointer">
                 <Reveal delay={100}>
                   <DetectionLab step={labStep} onStep={setLabStep} />
                 </Reveal>

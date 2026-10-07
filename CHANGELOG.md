@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.8.0 — 2026-10-07
+- Kill chain traveling glow synced to node lighting, both directions
+- Custom target cursor in the casefile, icons on every section eyebrow
+
 ## 1.7.0 — 2026-10-07
 - Footer guest terminal with help, whoami, hire, and contact commands
 - Time aware hero greeting and crosshair cursor in the casefile

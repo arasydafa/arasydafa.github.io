@@ -37,6 +37,7 @@ function Scramble({ text }: { text: string }) {
 export function TerminalHero({ onLab }: { onLab: () => void }) {
   const [wi, setWi] = useState(0);
   const [nonce, setNonce] = useState(0);
+  const [spot, setSpot] = useState<{ x: number; y: number } | null>(null);
   const greeting = (() => {
     const h = new Date().getHours();
     if (h < 11) return 'Good morning';
@@ -52,8 +53,24 @@ export function TerminalHero({ onLab }: { onLab: () => void }) {
   }, []);
 
   return (
-    <div className="hero-grid-bg flex min-h-[92vh] w-full flex-col">
-      <div className="ot-hero mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-6 py-16 md:px-10">
+    <div
+      className="hero-grid-bg relative flex min-h-[92vh] w-full flex-col overflow-hidden"
+      onMouseMove={(e) => {
+        const r = e.currentTarget.getBoundingClientRect();
+        setSpot({ x: e.clientX - r.left, y: e.clientY - r.top });
+      }}
+      onMouseLeave={() => setSpot(null)}
+    >
+      {spot ? (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background: `radial-gradient(320px at ${spot.x}px ${spot.y}px, rgb(30 58 95 / 0.14), transparent 70%)`,
+          }}
+        />
+      ) : null}
+      <div className="ot-hero relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-6 py-16 md:px-10">
         <p className="font-mono text-[13px] tracking-wide text-ot-muted">
           {greeting}, analyst · soc@portfolio:~ whoami
           <span className="ml-1 inline-block animate-pulse text-navy-text">▌</span>
