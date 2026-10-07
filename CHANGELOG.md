@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.10.1 — 2026-10-07
+- Fix rotating hero word clipped at the bottom (descenders and italic overhang now inside the clip region)
+
 ## 1.10.0 — 2026-10-07
 - Session gimmicks: tab title changes on blur, midnight shift flip, welcome back toast, idle nudge after 60 seconds
 - Buddy dodges the cursor, shouts WHOA on fast scrolls, counts explored sections, click to jump back to top

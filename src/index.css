@@ -85,6 +85,10 @@ html {
   display: inline-block;
   overflow: hidden;
   vertical-align: bottom;
+  /* Glyphs overflow the 0.95em line box (descenders, italic overhang).
+     Padding widens the clip region, negative margin keeps layout identical. */
+  padding: 0.16em 0.08em;
+  margin: -0.16em -0.08em;
 }
 
 .rot-word > span {
