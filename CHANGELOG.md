@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.9.0 — 2026-10-07
+- Footer terminal with hack, ping, rm, sudo, theme, and ver commands plus block cursor and two column help
+- Decodable hero scramble with click replay and mouse spotlight
+- Night shift auto dark with persisted manual override
+- Live WIB clock and days since last incident in footer
+- Custom target cursor in the casefile, kill chain glow synced both ways
+- Open to opportunities badge (off), icons on every section eyebrow
+
 ## 1.8.0 — 2026-10-07
 - Kill chain traveling glow synced to node lighting, both directions
 - Custom target cursor in the casefile, icons on every section eyebrow

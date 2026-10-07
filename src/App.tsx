@@ -206,8 +206,31 @@ export default function App() {
         setPaletteOpen((v) => !v);
       }
     };
+    const flipDark = () => {
+      setDark((prev) => {
+        const next = !prev;
+        document.documentElement.classList.toggle('dark', next);
+        try {
+          localStorage.setItem('ot-theme', next ? 'dark' : 'light');
+        } catch {
+          // Private mode. Theme just resets next visit.
+        }
+        return next;
+      });
+    };
+    const onFlip = () => {
+      try {
+        toggleThemeReveal(window.innerWidth / 2, window.innerHeight - 80, flipDark);
+      } catch {
+        flipDark();
+      }
+    };
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.addEventListener('ot-toggle-theme', onFlip);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('ot-toggle-theme', onFlip);
+    };
   }, []);
   const slideRail = (dir: 1 | -1) =>
     railRef.current?.scrollBy({ left: dir * 360, behavior: 'smooth' });
