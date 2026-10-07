@@ -37,6 +37,13 @@ function Scramble({ text }: { text: string }) {
 export function TerminalHero({ onLab }: { onLab: () => void }) {
   const [wi, setWi] = useState(0);
   const [nonce, setNonce] = useState(0);
+  const greeting = (() => {
+    const h = new Date().getHours();
+    if (h < 11) return 'Good morning';
+    if (h < 15) return 'Good afternoon';
+    if (h < 19) return 'Good evening';
+    return 'Good night';
+  })();
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -48,7 +55,8 @@ export function TerminalHero({ onLab }: { onLab: () => void }) {
     <div className="hero-grid-bg flex min-h-[92vh] w-full flex-col">
       <div className="ot-hero mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-6 py-16 md:px-10">
         <p className="font-mono text-[13px] tracking-wide text-ot-muted">
-          soc@portfolio:~ whoami<span className="ml-1 inline-block animate-pulse text-navy-text">▌</span>
+          {greeting}, analyst · soc@portfolio:~ whoami
+          <span className="ml-1 inline-block animate-pulse text-navy-text">▌</span>
         </p>
         <p className="mt-2 text-xl font-bold tracking-tight md:text-2xl">
           Arasy Dafa Sulistya Kurniawan

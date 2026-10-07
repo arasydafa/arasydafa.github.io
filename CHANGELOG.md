@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.0 — 2026-10-07
+- Footer guest terminal with help, whoami, hire, and contact commands
+- Time aware hero greeting and crosshair cursor in the casefile
+
 ## 1.6.0 — 2026-10-07
 - Open to work badge (off by default), decodable hero scramble
 - Live WIB clock and days since last incident in footer

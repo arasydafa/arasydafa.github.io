@@ -34,6 +34,7 @@ import {
 import { AttackMatrix } from './components/AttackMatrix';
 import { DetectionLab } from './components/DetectionLab';
 import { DotRail } from './components/DotRail';
+import { FooterTerm } from './components/FooterTerm';
 import { KillChain } from './components/KillChain';
 import { KonamiEgg } from './components/KonamiEgg';
 import { ProjectCard } from './components/ProjectCard';
@@ -465,7 +466,7 @@ export default function App() {
                   sanitized real case when ready.
                 </p>
               </Reveal>
-              <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_300px]">
+              <div className="mt-10 grid cursor-crosshair gap-10 lg:grid-cols-[1fr_300px]">
                 <Reveal delay={100}>
                   <DetectionLab step={labStep} onStep={setLabStep} />
                 </Reveal>
@@ -777,7 +778,10 @@ export default function App() {
 
           <footer className="w-full border-t border-ot-border">
             <div className="mx-auto w-full max-w-7xl px-6 py-10 md:px-10">
-              <nav aria-label="Sitemap" className="flex flex-wrap gap-x-5 gap-y-2 font-mono text-xs text-ot-muted">
+              <div className="max-w-xl">
+                <FooterTerm />
+              </div>
+              <nav aria-label="Sitemap" className="mt-8 flex flex-wrap gap-x-5 gap-y-2 font-mono text-xs text-ot-muted">
                 {ALL_SECTIONS.map((s) => (
                   <button
                     key={s.id}
