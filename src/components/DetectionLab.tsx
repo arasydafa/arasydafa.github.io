@@ -10,21 +10,30 @@ import { CaseLogs, CaseRule, TypeNote } from './CaseViewers';
 export function DetectionLab({ step, onStep }: { step: number; onStep: (n: number) => void }) {
   const current = CASE_STEPS[step];
   const shown = CASE_STEPS.slice(0, step + 1).flatMap((s) => s.logs);
-  const [cross, setCross] = useState<{ x: number; y: number } | null>(null);
+  const [cross, setCross] = useState<{ x: number; y: number; on: boolean } | null>(null);
+
+  // Crosshair only appears inside the log and rule bodies, not on panel titles.
+  // Position is kept while fading out so entering a panel never hard blinks.
+  const onMove = (e: React.MouseEvent) => {
+    const zone = (e.target as HTMLElement).closest('[data-cross]');
+    const r = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const y = e.clientY - r.top;
+    setCross((prev) => ({ x, y, on: Boolean(zone) }));
+  };
 
   return (
     <div
       className="relative grid gap-3"
-      onMouseMove={(e) => {
-        const r = e.currentTarget.getBoundingClientRect();
-        setCross({ x: e.clientX - r.left, y: e.clientY - r.top });
-      }}
+      onMouseMove={onMove}
       onMouseLeave={() => setCross(null)}
     >
       {cross ? (
         <div
           aria-hidden
-          className="pointer-events-none absolute z-10 hidden [@media(pointer:fine)]:block"
+          className={`pointer-events-none absolute z-10 hidden transition-opacity duration-150 [@media(pointer:fine)]:block ${
+            cross.on ? 'opacity-100' : 'opacity-0'
+          }`}
           style={{ left: cross.x, top: cross.y }}
         >
           <span className="block h-7 w-7 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-navy" />

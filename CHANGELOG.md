@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.10.0 — 2026-10-07
+- Session gimmicks: tab title changes on blur, midnight shift flip, welcome back toast, idle nudge after 60 seconds
+- Buddy dodges the cursor, shouts WHOA on fast scrolls, counts explored sections, click to jump back to top
+- Footer telemetry strip: live Tangerang weather, local visit counter, clock toggles WIB and UTC
+- View source easter egg in index.html
+- Copy email toast joke, days in the SOC counter, number keys 1 to 9 jump to sections
+- Deep link sections: URL follows scroll, hash on load scrolls there, hash button copies the section link
+- Packet drift dots in the hero background
+- Click any case log line to copy it
+- Casefile crosshair now fades in only over the log and rule bodies
+- Arsenal: Keycloak, LDAP, JumpServer, Gap Assessment, new Architecture and Network group, title case everywhere
+
 ## 1.9.0 — 2026-10-07
 - Footer terminal with hack, ping, rm, sudo, theme, and ver commands plus block cursor and two column help
 - Decodable hero scramble with click replay and mouse spotlight

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CopyButton } from '@omega-os/ui';
+import { CopyButton, useToast } from '@omega-os/ui';
 
 type Level = 'debug' | 'info' | 'success' | 'warn' | 'error';
 
@@ -52,6 +52,7 @@ export function TypeNote({ text }: { text: string }) {
 }
 
 // Static case log. Fresh rows cascade in one by one, key rows highlighted.
+// Click a row to copy it for discussion.
 export function CaseLogs({
   lines,
   keys,
@@ -61,29 +62,42 @@ export function CaseLogs({
   keys: string[];
   freshIds: string[];
 }) {
+  const toast = useToast();
+
+  const copyRow = (l: { level: Level; time: string; text: string }) => {
+    navigator.clipboard?.writeText(`[${l.time}] ${l.level.toUpperCase()} ${l.text}`);
+    toast.show('success', 'Log line copied.', { title: 'CASE.LOG' });
+  };
+
   return (
     <div className="overflow-hidden rounded-ot-md border border-ot-border bg-ot-bg">
       <div className="border-b border-ot-border bg-ot-surface px-3 py-1.5 font-mono text-xs text-ot-muted">
-        case.log · {lines.length} lines
+        case.log · {lines.length} lines · click a line to copy
       </div>
-      <div className="grid gap-0.5 p-3 font-mono text-[13px] leading-6">
+      <div
+        data-cross=""
+        className="grid gap-0.5 p-3 font-mono text-[13px] leading-6 [@media(pointer:fine)]:cursor-none [&_button]:cursor-none [&_a]:cursor-none"
+      >
         {lines.map((l, i) => {
           const hot = isKey(l.text, keys);
           const fresh = freshIds.includes(l.id);
           return (
-            <p
+            <button
               key={l.id}
+              type="button"
+              onClick={() => copyRow(l)}
+              title="Click to copy this line"
               style={fresh ? { animationDelay: `${Math.min(i * 55, 550)}ms` } : undefined}
-              className={`whitespace-pre-wrap break-all rounded-ot-sm px-2 py-0.5 ${
+              className={`whitespace-pre-wrap break-all rounded-ot-sm px-2 py-0.5 text-left transition-colors hover:bg-ot-surface ${
                 fresh ? 'case-row' : ''
-              } ${hot ? 'bg-warning-bg' : 'opacity-55'}`}
+              } ${hot ? 'bg-warning-bg hover:bg-warning-bg' : 'opacity-55 hover:opacity-100'}`}
             >
               <span className="text-ot-muted">[{l.time}] </span>
               <span className={`mr-2 font-semibold ${LEVEL_COLOR[l.level]}`}>
                 {l.level.toUpperCase()}
               </span>
               <span className={LEVEL_COLOR[l.level]}>{l.text}</span>
-            </p>
+            </button>
           );
         })}
       </div>
@@ -108,7 +122,10 @@ export function CaseRule({
         <span className="min-w-0 flex-1 font-mono text-xs text-ot-muted">{language}</span>
         <CopyButton text={code} />
       </div>
-      <pre className="overflow-x-auto p-3 font-mono text-[13px] leading-6">
+      <pre
+        data-cross=""
+        className="overflow-x-auto p-3 font-mono text-[13px] leading-6 [@media(pointer:fine)]:cursor-none [&_button]:cursor-none [&_a]:cursor-none"
+      >
         <code className="block min-w-max">
           {rows.map((row, i) => {
             const hot = isKey(row, keys);

@@ -1,10 +1,109 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Badge, Button } from '@omega-os/ui';
 import { ArrowDown, Github } from 'lucide-react';
 import { PROFILE } from '../data/placeholder';
 
 const WORDS = ['contain', 'triage', 'hunt', 'isolate'];
 const GLYPHS = '!<>-_\\/[]{}=+*^?#';
+
+// Drifting packet dots in the hero background. Static when reduced motion is on.
+function PacketDrift() {
+  const ref = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = ref.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let w = 0;
+    let h = 0;
+    const dots = Array.from({ length: 34 }, () => ({
+      x: Math.random(),
+      y: Math.random(),
+      vx: 0.00012 + Math.random() * 0.00022,
+      vy: (Math.random() - 0.5) * 0.00006,
+      r: 1.6 + Math.random() * 2,
+      a: 0.28 + Math.random() * 0.3,
+    }));
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = canvas.clientWidth;
+      h = canvas.clientHeight;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    const draw = () => {
+      const dark = document.documentElement.classList.contains('dark');
+      const rgb = dark ? '150, 178, 214' : '30, 58, 95';
+      ctx.clearRect(0, 0, w, h);
+      for (const d of dots) {
+        const px = d.x * w;
+        const py = d.y * h;
+        // Short trail behind the dot, like a packet moving on a wire.
+        const tail = d.vx * w * 420;
+        ctx.beginPath();
+        ctx.moveTo(px - tail, py);
+        ctx.lineTo(px, py);
+        ctx.strokeStyle = `rgba(${rgb}, ${d.a * 0.45})`;
+        ctx.lineWidth = d.r * 0.7;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(px, py, d.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${rgb}, ${d.a})`;
+        ctx.fill();
+      }
+    };
+
+    let raf = 0;
+    let last = performance.now();
+    const loop = (t: number) => {
+      const dt = Math.min(64, t - last);
+      last = t;
+      for (const d of dots) {
+        d.x += d.vx * dt;
+        d.y += d.vy * dt;
+        if (d.x > 1.05) d.x = -0.05;
+        if (d.y > 1.05) d.y = -0.05;
+        if (d.y < -0.05) d.y = 1.05;
+      }
+      draw();
+      raf = requestAnimationFrame(loop);
+    };
+
+    resize();
+    draw();
+    const onTheme = () => requestAnimationFrame(draw);
+    if (!reduce) {
+      raf = requestAnimationFrame(loop);
+    } else {
+      // Static art still needs a repaint after the theme flips.
+      window.addEventListener('ot-toggle-theme', onTheme);
+    }
+    const onResize = () => {
+      resize();
+      draw();
+    };
+    window.addEventListener('resize', onResize);
+    return () => {
+      window.removeEventListener('resize', onResize);
+      window.removeEventListener('ot-toggle-theme', onTheme);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={ref}
+      aria-hidden
+      className="pointer-events-none absolute inset-0 h-full w-full"
+    />
+  );
+}
 
 // Scrambles once on mount, then settles. Skipped for reduced motion.
 function Scramble({ text }: { text: string }) {
@@ -61,6 +160,7 @@ export function TerminalHero({ onLab }: { onLab: () => void }) {
       }}
       onMouseLeave={() => setSpot(null)}
     >
+      <PacketDrift />
       {spot ? (
         <div
           aria-hidden

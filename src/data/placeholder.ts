@@ -76,21 +76,21 @@ export const EXPERIENCE = [
 export const SKILL_GROUPS = [
   {
     id: 'g1',
-    title: 'Detection & response',
+    title: 'Detection & Response',
     desc: 'Security operations, hunting, and analysis.',
     items: ['Wazuh', 'ELK Stack', 'Sigma', 'YARA', 'Suricata', 'Wireshark', 'OpenCTI', 'MISP', 'Honeypots', 'Honeytokens'],
   },
   {
     id: 'g2',
-    title: 'Cloud & infrastructure',
+    title: 'Cloud & Infrastructure',
     desc: 'Posture management across clouds and containers.',
     items: ['Alibaba Cloud', 'AWS', 'GCP', 'Cloudflare', 'ZTNA', 'Docker', 'Kubernetes', 'Linux (Ubuntu, Kali)'],
   },
   {
     id: 'g6',
-    title: 'Telemetry pipeline',
+    title: 'Telemetry Pipeline',
     desc: 'Ship, buffer, store, and keep it searchable.',
-    items: ['OpenSearch', 'Vector', 'Redis', 'PostgreSQL', 'Log forwarding', 'Ingestion pipelines', 'Index policies', 'Snapshots'],
+    items: ['OpenSearch', 'Vector', 'Redis', 'PostgreSQL', 'Log Forwarding', 'Ingestion Pipelines', 'Index Policies', 'Snapshots'],
   },
   {
     id: 'g3',
@@ -100,7 +100,7 @@ export const SKILL_GROUPS = [
   },
   {
     id: 'g4',
-    title: 'Exposure & endpoints',
+    title: 'Exposure & Endpoints',
     desc: 'Finding and closing gaps before attackers do.',
     items: ['OpenVAS', 'Cylance', 'Acronis', 'FIM', 'Vulnerability Management', 'Security Assessments'],
   },
@@ -108,7 +108,13 @@ export const SKILL_GROUPS = [
     id: 'g5',
     title: 'Governance',
     desc: 'Controls, compliance, and least privilege.',
-    items: ['IAM', 'PAM', 'Least Privilege', 'ISO 27001', 'PCI-DSS', 'Risk & Governance'],
+    items: ['IAM', 'PAM', 'Least Privilege', 'Keycloak', 'LDAP', 'JumpServer', 'Gap Assessment', 'ISO 27001', 'PCI-DSS', 'Risk & Governance'],
+  },
+  {
+    id: 'g7',
+    title: 'Architecture & Network',
+    desc: 'Designing where the security controls actually sit.',
+    items: ['Security Architecture Design', 'Network Security', 'Cloud Security', 'Segmentation', 'Zero Trust'],
   },
 ];
 

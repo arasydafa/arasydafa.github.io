@@ -1,14 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Crosshair, FileText, Lock, Radar, Shield, Siren } from 'lucide-react';
 
 const IDS = [
   'about',
-  'work',
   'experience',
+  'work',
   'skills',
   'metrics',
   'lab',
   'writeups',
+  'ctf',
+  'classroom',
   'publications',
   'certs',
   'contact',
@@ -17,7 +19,8 @@ const IDS = [
 function stateFor(id: string) {
   if (id === 'contact') return { label: 'CONTAINED', Icon: Lock };
   if (id === 'lab') return { label: 'ENGAGED', Icon: Siren };
-  if (id === 'writeups' || id === 'publications' || id === 'certs')
+  if (id === 'ctf') return { label: 'GAME ON', Icon: Crosshair };
+  if (id === 'writeups' || id === 'publications' || id === 'certs' || id === 'classroom')
     return { label: 'REPORTING', Icon: FileText };
   if (id === 'experience' || id === 'skills' || id === 'metrics')
     return { label: 'HUNTING', Icon: Crosshair };
@@ -46,12 +49,27 @@ export function ScrollProgress() {
   );
 }
 
-// Corner buddy whose status follows the reader down the page.
+// Corner buddy: status follows the reader, dodges the cursor, counts explored
+// sections, shouts on fast scrolls, and jumps back to top on click.
 export function ScrollBuddy() {
   const [current, setCurrent] = useState('top');
+  const [dodge, setDodge] = useState<{ x: number; y: number } | null>(null);
+  const [whoa, setWhoa] = useState(false);
+  const last = useRef({ y: 0, t: 0 });
+  const timers = useRef<number[]>([]);
 
   useEffect(() => {
     const onScroll = () => {
+      const now = performance.now();
+      const speed = Math.abs(window.scrollY - last.current.y) / Math.max(1, now - last.current.t);
+      last.current = { y: window.scrollY, t: now };
+      if (speed > 4) {
+        setWhoa(true);
+        timers.current.forEach(clearTimeout);
+        timers.current = [
+          window.setTimeout(() => setWhoa(false), 1000),
+        ];
+      }
       const mid = window.scrollY + window.innerHeight * 0.4;
       let found = 'top';
       for (const id of IDS) {
@@ -62,15 +80,33 @@ export function ScrollBuddy() {
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      timers.current.forEach(clearTimeout);
+    };
   }, []);
 
+  const dodgeAway = () => {
+    setDodge({ x: (Math.random() > 0.5 ? 1 : -1) * (36 + Math.random() * 30), y: -(24 + Math.random() * 24) });
+    timers.current.push(window.setTimeout(() => setDodge(null), 700));
+  };
+
   const { label, Icon } = stateFor(current);
+  const explored = current === 'top' ? 0 : IDS.indexOf(current as (typeof IDS)[number]) + 1;
 
   return (
-    <div
-      className="fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 rounded-full py-2 pl-3 pr-4 font-mono text-xs shadow-ot-md"
-      style={{ background: '#ffffff', border: '1px solid #E2E5EA', color: '#162C4A' }}
+    <button
+      type="button"
+      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      onPointerEnter={dodgeAway}
+      aria-label={`Back to top. Status ${label}, explored ${explored} of ${IDS.length}.`}
+      className="fixed bottom-5 right-5 z-40 inline-flex cursor-pointer items-center gap-2 rounded-full py-2 pl-3 pr-4 font-mono text-xs shadow-ot-md transition-transform"
+      style={{
+        background: '#ffffff',
+        border: '1px solid #E2E5EA',
+        color: '#162C4A',
+        transform: dodge ? `translate(${dodge.x}px, ${dodge.y}px)` : undefined,
+      }}
     >
       <span className="relative flex h-2 w-2">
         <span
@@ -80,7 +116,7 @@ export function ScrollBuddy() {
         <span className="relative inline-flex h-2 w-2 rounded-full" style={{ background: '#1E3A5F' }} />
       </span>
       <Icon key={label} size={16} strokeWidth={2.5} aria-hidden style={{ color: '#162C4A' }} />
-      {label}
-    </div>
+      {whoa ? 'WHOA' : label} · {explored}/{IDS.length}
+    </button>
   );
 }

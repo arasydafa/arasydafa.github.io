@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState, type ReactNode } from 'react';
 import {
   Badge,
   Button,
@@ -6,6 +6,7 @@ import {
   CopyButton,
   ToasterProvider,
   toggleThemeReveal,
+  useToast,
 } from '@omega-os/ui';
 import {
   ArrowLeft,
@@ -36,6 +37,7 @@ import { DetectionLab } from './components/DetectionLab';
 import { DotRail } from './components/DotRail';
 import { FooterTerm } from './components/FooterTerm';
 import { KillChain } from './components/KillChain';
+import { SessionGimmicks } from './components/SessionGimmicks';
 import { KonamiEgg } from './components/KonamiEgg';
 import { ProjectCard } from './components/ProjectCard';
 import { Reveal } from './components/Reveal';
@@ -109,29 +111,131 @@ function CountUp({ to, suffix = '' }: { to: number; suffix?: string }) {
 }
 
 function Eyebrow({ index, label, icon }: { index: string; label: string; icon: React.ReactNode }) {
+  const toast = useToast();
+  const id = ALL_SECTIONS[Number(index) - 1]?.id;
+
+  const copyLink = () => {
+    const url = `${window.location.origin}${window.location.pathname}#${id}`;
+    navigator.clipboard?.writeText(url);
+    toast.show('success', `Link to #${id} copied. Share the lab.`, { title: 'DEEP LINK' });
+  };
+
   return (
     <p className="flex items-center gap-2 font-mono text-xs tracking-widest text-ot-muted">
       <span className="text-navy-text">{icon}</span>
       {index} / {label}
+      {id ? (
+        <button
+          type="button"
+          onClick={copyLink}
+          title={`Copy link to #${id}`}
+          aria-label={`Copy link to ${label}`}
+          className="rounded-ot-sm px-1.5 py-0.5 text-navy-text opacity-40 transition-opacity hover:bg-ot-surface-2 hover:opacity-100 focus-visible:opacity-100"
+        >
+          #
+        </button>
+      ) : null}
     </p>
   );
 }
 
-// Live WIB clock for the footer SOC strip.
+// Start of the first SOC role. Drives the live days counter.
+const SOC_START = Date.parse('2024-08-01');
+
+function daysInSoc() {
+  return Math.floor((Date.now() - SOC_START) / 86_400_000);
+}
+
+// Copy email with the phishing joke. Lives under ToasterProvider.
+function EmailCopy() {
+  const toast = useToast();
+  return (
+    <CopyButton
+      text={PROFILE.email}
+      className="!text-white/70 hover:!bg-white/10 hover:!text-white"
+      onCopy={() => toast.show('info', 'Copied. No phishing involved.', { title: 'CLIPBOARD' })}
+    />
+  );
+}
+
+// Live WIB clock. Click toggles UTC, threat intel lives there.
 function WibClock() {
   const [now, setNow] = useState('');
+  const [utc, setUtc] = useState(false);
 
   useEffect(() => {
     const tick = () =>
       setNow(
-        new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Jakarta', hour12: false }),
+        new Date().toLocaleTimeString('en-GB', {
+          timeZone: utc ? 'UTC' : 'Asia/Jakarta',
+          hour12: false,
+        }),
       );
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
+  }, [utc]);
+
+  return (
+    <button
+      type="button"
+      onClick={() => setUtc((v) => !v)}
+      title="Toggle WIB and UTC"
+      className="transition-colors hover:text-ot-text"
+    >
+      SOC TIME {now} {utc ? 'UTC' : 'WIB'}
+    </button>
+  );
+}
+
+// Footer telemetry strip: weather, visit count, clock, incident counter.
+// Items are joined by dots, and a hidden item takes its dot with it.
+function FooterTelemetry() {
+  const [temp, setTemp] = useState<number | null>(null);
+  const [visit, setVisit] = useState<number | null>(null);
+
+  // Tangerang weather, no key needed. Silent when offline.
+  useEffect(() => {
+    fetch(
+      'https://api.open-meteo.com/v1/forecast?latitude=-6.2&longitude=106.63&current=temperature_2m&timezone=Asia%2FJakarta',
+    )
+      .then((r) => r.json())
+      .then((j) => {
+        const t = j?.current?.temperature_2m;
+        if (typeof t === 'number') setTemp(Math.round(t));
+      })
+      .catch(() => {
+        // Offline or blocked. Footer stays quiet.
+      });
   }, []);
 
-  return <span>SOC TIME {now} WIB</span>;
+  // Local visit counter. Never leaves the browser.
+  useEffect(() => {
+    try {
+      const v = Number(localStorage.getItem('ot-visits') ?? 0) + 1;
+      localStorage.setItem('ot-visits', String(v));
+      setVisit(v);
+    } catch {
+      // Private mode. No counting.
+    }
+  }, []);
+
+  const parts: ReactNode[] = [];
+  if (temp !== null) parts.push(`TANGERANG ${temp}°C · GOOD HUNTING WEATHER`);
+  if (visit !== null) parts.push(`VISIT #${visit}`);
+  parts.push(<WibClock key="clock" />);
+  parts.push('0 DAYS SINCE LAST INCIDENT');
+
+  return (
+    <span className="inline-flex flex-wrap items-center gap-x-2">
+      {parts.map((part, i) => (
+        <Fragment key={i}>
+          {i > 0 && <span aria-hidden>·</span>}
+          <span>{part}</span>
+        </Fragment>
+      ))}
+    </span>
+  );
 }
 
 export default function App() {
@@ -179,6 +283,11 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const forceTheme = (next: boolean) => {
+    setDark(next);
+    document.documentElement.classList.toggle('dark', next);
+  };
+
   const toggleTheme = (e: React.MouseEvent<HTMLButtonElement>) => {
     const x = e.clientX || window.innerWidth - 60;
     const y = e.clientY || 40;
@@ -204,6 +313,17 @@ export default function App() {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         setPaletteOpen((v) => !v);
+        return;
+      }
+      // Number keys jump to a section, but never while typing.
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      const tag = (e.target as HTMLElement | null)?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target as HTMLElement | null)?.isContentEditable)
+        return;
+      const n = Number(e.key);
+      if (Number.isInteger(n) && n >= 1 && n <= 9) {
+        const section = ALL_SECTIONS[n - 1];
+        if (section) go(section.id);
       }
     };
     const flipDark = () => {
@@ -232,6 +352,37 @@ export default function App() {
       window.removeEventListener('ot-toggle-theme', onFlip);
     };
   }, []);
+
+  // Deep-link: URL follows the section in view, and a hash on load scrolls there.
+  useEffect(() => {
+    let raf = 0;
+    const sync = () => {
+      raf = 0;
+      const mid = window.scrollY + window.innerHeight * 0.35;
+      let found = '';
+      for (const s of ALL_SECTIONS) {
+        const el = document.getElementById(s.id);
+        if (el && el.offsetTop <= mid) found = s.id;
+      }
+      const next = found ? `#${found}` : window.location.pathname;
+      if (window.location.hash !== next && !(next === window.location.pathname && !window.location.hash)) {
+        history.replaceState(null, '', next);
+      }
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(sync);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    sync();
+    if (window.location.hash) {
+      const id = window.location.hash.slice(1);
+      requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView());
+    }
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
   const slideRail = (dir: 1 | -1) =>
     railRef.current?.scrollBy({ left: dir * 360, behavior: 'smooth' });
 
@@ -239,6 +390,7 @@ export default function App() {
     <ToasterProvider>
       <ScrollProgress />
       <KonamiEgg />
+      <SessionGimmicks forceTheme={forceTheme} />
       <div className="min-h-screen bg-ot-bg font-sans text-ot-text">
         {/* Minimal full-width bar — no panel box */}
         <header className="sticky top-0 z-10 border-b border-ot-border bg-ot-bg/85 backdrop-blur">
@@ -309,6 +461,9 @@ export default function App() {
                 </p>
                 <p className="mt-4 font-mono text-xs tracking-widest text-ot-muted">
                   BASED IN · {PROFILE.location.toUpperCase()}
+                </p>
+                <p className="mt-1 font-mono text-xs tracking-widest text-navy-text">
+                  IN THE SOC · {daysInSoc()} DAYS AND COUNTING
                 </p>
                 <p className="mt-1 font-mono text-xs tracking-widest text-ot-muted">
                   FOCUS · DETECTION · INTEL · ENGINEERING
@@ -509,7 +664,7 @@ export default function App() {
                   sanitized real case when ready.
                 </p>
               </Reveal>
-              <div className="mt-10 grid cursor-none gap-10 lg:grid-cols-[1fr_300px] [&_button]:cursor-pointer">
+              <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_300px] [&_button]:cursor-pointer">
                 <Reveal delay={100}>
                   <DetectionLab step={labStep} onStep={setLabStep} />
                 </Reveal>
@@ -796,7 +951,7 @@ export default function App() {
                     <Mail size={15} />
                     {PROFILE.email}
                   </span>
-                  <CopyButton text={PROFILE.email} className="!text-white/70 hover:!bg-white/10 hover:!text-white" />
+                  <EmailCopy />
                   <a
                     href={PROFILE.linkedin}
                     target="_blank"
@@ -837,12 +992,8 @@ export default function App() {
                 ))}
               </nav>
             </div>
-            <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-3 border-t border-ot-border px-6 py-6 font-mono text-xs text-ot-muted md:px-10">
+            <div className="mx-auto flex w-full max-w-7xl items-center gap-4 border-t border-ot-border px-6 py-5 font-mono text-xs text-ot-muted md:px-10">
               <span>© 2026 {PROFILE.handle} · v{pkg.version}</span>
-              <span className="inline-flex items-center gap-2">
-                <WibClock />
-                <span aria-hidden>·</span>0 DAYS SINCE LAST INCIDENT
-              </span>
               <span className="ml-auto inline-flex items-center gap-2">
                 STACK · REACT · VITE · @OMEGA-OS/UI
                 <button
@@ -854,6 +1005,9 @@ export default function App() {
                   <ArrowUp size={14} />
                 </button>
               </span>
+            </div>
+            <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-x-4 gap-y-1 border-t border-ot-border px-6 py-4 font-mono text-[11px] text-ot-muted md:px-10">
+              <FooterTelemetry />
             </div>
           </footer>
         </main>
