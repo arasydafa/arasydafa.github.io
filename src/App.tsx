@@ -116,6 +116,23 @@ function Eyebrow({ index, label, icon }: { index: string; label: string; icon: R
   );
 }
 
+// Live WIB clock for the footer SOC strip.
+function WibClock() {
+  const [now, setNow] = useState('');
+
+  useEffect(() => {
+    const tick = () =>
+      setNow(
+        new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Jakarta', hour12: false }),
+      );
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return <span>SOC TIME {now} WIB</span>;
+}
+
 export default function App() {
   const [dark, setDark] = useState(false);
   const [labStep, setLabStep] = useState(0);
@@ -775,6 +792,10 @@ export default function App() {
             </div>
             <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-3 border-t border-ot-border px-6 py-6 font-mono text-xs text-ot-muted md:px-10">
               <span>© 2026 {PROFILE.handle} · v{pkg.version}</span>
+              <span className="inline-flex items-center gap-2">
+                <WibClock />
+                <span aria-hidden>·</span>0 DAYS SINCE LAST INCIDENT
+              </span>
               <span className="ml-auto inline-flex items-center gap-2">
                 STACK · REACT · VITE · @OMEGA-OS/UI
                 <button

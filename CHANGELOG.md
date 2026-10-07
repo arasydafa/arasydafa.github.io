@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.0 — 2026-10-07
+- Open to work badge (off by default), decodable hero scramble
+- Live WIB clock and days since last incident in footer
+
 ## 1.5.1 — 2026-10-07
 - SEO meta and Open Graph share image, robots.txt, sitemap.xml
 

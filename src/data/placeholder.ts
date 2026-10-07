@@ -10,6 +10,7 @@ export const PROFILE = {
   linkedin: 'https://www.linkedin.com/in/arasydafa/',
   medium: 'https://medium.com/@arasydafa',
   email: 'arasy.dafa@gmail.com',
+  openToWork: false,
 };
 
 export const ABOUT_SUMMARY = `SOC Engineer turning threat intel into high-fidelity detections. I map adversary behavior with Sigma, YARA and MITRE ATT&CK so threats get caught fast.`;

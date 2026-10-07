@@ -1,13 +1,42 @@
 import { useEffect, useState } from 'react';
-import { Button } from '@omega-os/ui';
+import { Badge, Button } from '@omega-os/ui';
 import { ArrowDown, Github } from 'lucide-react';
 import { PROFILE } from '../data/placeholder';
 
 const WORDS = ['contain', 'triage', 'hunt', 'isolate'];
+const GLYPHS = '!<>-_\\/[]{}=+*^?#';
+
+// Scrambles once on mount, then settles. Skipped for reduced motion.
+function Scramble({ text }: { text: string }) {
+  const [out, setOut] = useState(text);
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let frame = 0;
+    const total = 42;
+    const id = setInterval(() => {
+      frame += 1;
+      const p = frame / total;
+      setOut(
+        text
+          .split('')
+          .map((c, i) =>
+            i / text.length < p ? c : GLYPHS[Math.floor(Math.random() * GLYPHS.length)],
+          )
+          .join(''),
+      );
+      if (frame >= total) clearInterval(id);
+    }, 50);
+    return () => clearInterval(id);
+  }, [text]);
+
+  return <span>{out}</span>;
+}
 
 // Full-screen hero — rotating verb in the middle line, no panel.
 export function TerminalHero({ onLab }: { onLab: () => void }) {
   const [wi, setWi] = useState(0);
+  const [nonce, setNonce] = useState(0);
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -24,14 +53,25 @@ export function TerminalHero({ onLab }: { onLab: () => void }) {
         <p className="mt-2 text-xl font-bold tracking-tight md:text-2xl">
           Arasy Dafa Sulistya Kurniawan
         </p>
-        <h1 className="mt-4 text-[clamp(3rem,10vw,7.5rem)] font-extrabold leading-[0.95] tracking-tight">
-          DETECT
+        {PROFILE.openToWork ? (
+          <p className="mt-3">
+            <Badge tone="success" icon={<span className="h-2 w-2 animate-pulse rounded-full bg-success" />}>
+              Open to opportunities
+            </Badge>
+          </p>
+        ) : null}
+        <h1
+          className="mt-4 cursor-pointer text-[clamp(3rem,10vw,7.5rem)] font-extrabold leading-[0.95] tracking-tight"
+          onClick={() => setNonce((n) => n + 1)}
+          title="Click to decode"
+        >
+          <Scramble key={`d${nonce}`} text="DETECT" />
           <br />
           <span className="rot-word font-light italic text-navy-text">
             <span key={wi}>{WORDS[wi]}</span>
           </span>
           <br />
-          REPEAT
+          <Scramble key={`r${nonce}`} text="REPEAT" />
         </h1>
         <p className="mt-6 max-w-xl text-base leading-relaxed text-ot-muted md:text-lg">
           SOC Engineer at {PROFILE.org}, focused on threat detection, threat intelligence
