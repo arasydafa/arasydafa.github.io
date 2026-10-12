@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.11.0 — 2026-10-12
+- Download CV button in hero and contact, exports the live Google Doc as PDF
+- Dispatches sorted newest first by date, append freely and order stays correct
+- New writeup: How I Route SSH Inside the Kernel with Sockmap
+
 ## 1.10.1 — 2026-10-07
 - Fix rotating hero word clipped at the bottom (descenders and italic overhang now inside the clip region)
 

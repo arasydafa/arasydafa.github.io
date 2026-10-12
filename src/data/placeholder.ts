@@ -10,6 +10,7 @@ export const PROFILE = {
   linkedin: 'https://www.linkedin.com/in/arasydafa/',
   medium: 'https://medium.com/@arasydafa',
   email: 'arasy.dafa@gmail.com',
+  cvUrl: 'https://docs.google.com/document/d/1Ol6VRQRRhfaVlJO3LGg427VO8jdE60eaJsueNX8OPMk/export?format=pdf',
   openToWork: false,
 };
 
@@ -280,23 +281,34 @@ export const PROJECTS = [
   },
 ];
 
+// Newest first is enforced by date sort in App.tsx. Append freely.
 export const WRITEUPS = [
+  {
+    id: 'w-sockmap-ssh',
+    title: 'How I Route SSH Inside the Kernel with Sockmap',
+    meta: 'Medium · Oct 2026 · eBPF, Sockmap',
+    date: '2026-10-09',
+    url: 'https://medium.com/@arasydafa/how-i-route-ssh-inside-the-kernel-with-sockmap-4d102aade0e3',
+  },
   {
     id: 'w1',
     title: 'File Integrity Monitoring Best Practices with Wazuh: A Theoretical Perspective',
     meta: 'Medium · Nov 2025 · FIM, Wazuh',
+    date: '2025-11-01',
     url: 'https://medium.com/@arasydafa/file-integrity-monitoring-best-practices-with-wazuh-a-theoretical-perspective-b74fe577f1f7',
   },
   {
     id: 'w2',
     title: 'How Wazuh Processes Logs: From Decoder to Rule Matching, Part 2',
     meta: 'Medium · Oct 2025 · Detection Engineering',
+    date: '2025-10-01',
     url: 'https://medium.com/@arasydafa/how-wazuh-processes-logs-from-decoder-to-rule-matching-part-2-f971a9a750ec',
   },
   {
     id: 'w3',
     title: 'How Wazuh Processes Logs: From Decoder to Rule Matching, Part 1',
     meta: 'Medium · Jul 2025 · Detection Engineering',
+    date: '2025-07-01',
     url: 'https://medium.com/@arasydafa/how-wazuh-processes-logs-from-decoder-to-rule-matching-6c40d4dc1b21',
   },
 ];

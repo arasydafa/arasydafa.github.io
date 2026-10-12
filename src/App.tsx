@@ -16,6 +16,7 @@ import {
   Award,
   BookOpen,
   Briefcase,
+  Download,
   FlaskConical,
   Github,
   GraduationCap,
@@ -693,7 +694,7 @@ export default function App() {
                 </h2>
               </Reveal>
               <div className="mt-6 divide-y divide-ot-border border-y border-ot-border">
-                {WRITEUPS.map((w, i) => (
+                {[...WRITEUPS].sort((a, b) => b.date.localeCompare(a.date)).map((w, i) => (
                   <Reveal key={w.id} delay={Math.min(i * 80, 160)}>
                     <a
                       href={w.url}
@@ -968,6 +969,15 @@ export default function App() {
                     className="inline-flex h-8 items-center gap-2 rounded-ot-sm bg-white/15 px-3 text-[13px] font-semibold text-white transition-colors hover:bg-white/25"
                   >
                     Medium
+                  </a>
+                  <a
+                    href={PROFILE.cvUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex h-8 items-center gap-2 rounded-ot-sm bg-white/15 px-3 text-[13px] font-semibold text-white transition-colors hover:bg-white/25"
+                  >
+                    <Download size={15} />
+                    Download CV
                   </a>
                 </div>
               </Reveal>

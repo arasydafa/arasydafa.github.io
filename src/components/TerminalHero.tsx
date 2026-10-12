@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Badge, Button } from '@omega-os/ui';
-import { ArrowDown, Github } from 'lucide-react';
+import { ArrowDown, Download, Github } from 'lucide-react';
 import { PROFILE } from '../data/placeholder';
 
 const WORDS = ['contain', 'triage', 'hunt', 'isolate'];
@@ -209,6 +209,11 @@ export function TerminalHero({ onLab }: { onLab: () => void }) {
           <a href={PROFILE.github} target="_blank" rel="noreferrer">
             <Button variant="secondary" icon={<Github size={16} />}>
               GitHub
+            </Button>
+          </a>
+          <a href={PROFILE.cvUrl} target="_blank" rel="noreferrer">
+            <Button variant="secondary" icon={<Download size={16} />}>
+              Download CV
             </Button>
           </a>
         </div>
