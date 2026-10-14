@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Crosshair, FileText, Lock, Radar, Shield, Siren } from 'lucide-react';
+import { scrollBehavior } from '../lib';
 
 const IDS = [
   'about',
@@ -59,11 +60,13 @@ export function ScrollBuddy() {
   const timers = useRef<number[]>([]);
 
   useEffect(() => {
-    const onScroll = () => {
+    let raf = 0;
+    const tick = () => {
+      raf = 0;
       const now = performance.now();
       const speed = Math.abs(window.scrollY - last.current.y) / Math.max(1, now - last.current.t);
       last.current = { y: window.scrollY, t: now };
-      if (speed > 4) {
+      if (speed > 12) {
         setWhoa(true);
         timers.current.forEach(clearTimeout);
         timers.current = [
@@ -78,10 +81,14 @@ export function ScrollBuddy() {
       }
       setCurrent(found);
     };
-    onScroll();
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(tick);
+    };
+    tick();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', onScroll);
+      if (raf) cancelAnimationFrame(raf);
       timers.current.forEach(clearTimeout);
     };
   }, []);
@@ -97,7 +104,7 @@ export function ScrollBuddy() {
   return (
     <button
       type="button"
-      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      onClick={() => window.scrollTo({ top: 0, behavior: scrollBehavior() })}
       onPointerEnter={dodgeAway}
       aria-label={`Back to top. Status ${label}, explored ${explored} of ${IDS.length}.`}
       className="fixed bottom-5 right-5 z-40 inline-flex cursor-pointer items-center gap-2 rounded-full py-2 pl-3 pr-4 font-mono text-xs shadow-ot-md transition-transform"

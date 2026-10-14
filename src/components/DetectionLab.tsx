@@ -19,7 +19,7 @@ export function DetectionLab({ step, onStep }: { step: number; onStep: (n: numbe
     const r = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - r.left;
     const y = e.clientY - r.top;
-    setCross((prev) => ({ x, y, on: Boolean(zone) }));
+    setCross({ x, y, on: Boolean(zone) });
   };
 
   return (
@@ -67,7 +67,7 @@ export function DetectionLab({ step, onStep }: { step: number; onStep: (n: numbe
           </Button>
         </span>
       </div>
-      <div className="flex flex-wrap gap-1.5" aria-label="Case stages">
+      <div className="flex flex-wrap gap-1.5" role="group" aria-label="Case stages">
         {CASE_STEPS.map((s, i) => (
           <button
             key={s.id}

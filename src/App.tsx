@@ -34,6 +34,7 @@ import {
   Activity,
 } from 'lucide-react';
 import { AttackMatrix } from './components/AttackMatrix';
+import { scrollBehavior } from './lib';
 import { DetectionLab } from './components/DetectionLab';
 import { DotRail } from './components/DotRail';
 import { FooterTerm } from './components/FooterTerm';
@@ -306,7 +307,7 @@ export default function App() {
 
   const go = (id: string) => {
     setPaletteOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById(id)?.scrollIntoView({ behavior: scrollBehavior() });
   };
 
   useEffect(() => {
@@ -385,7 +386,7 @@ export default function App() {
     };
   }, []);
   const slideRail = (dir: 1 | -1) =>
-    railRef.current?.scrollBy({ left: dir * 360, behavior: 'smooth' });
+    railRef.current?.scrollBy({ left: dir * 360, behavior: scrollBehavior() });
 
   return (
     <ToasterProvider>
@@ -396,7 +397,7 @@ export default function App() {
         {/* Minimal full-width bar — no panel box */}
         <header className="sticky top-0 z-10 border-b border-ot-border bg-ot-bg/85 backdrop-blur">
           <div className="mx-auto flex w-full max-w-7xl items-center gap-5 px-6 py-3 md:px-10">
-            <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex items-center gap-2">
+            <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: scrollBehavior() })} className="flex items-center gap-2">
               <span className="grid h-7 w-7 place-items-center rounded-ot-sm bg-navy text-white">
                 <Shield size={14} />
               </span>
@@ -1009,7 +1010,7 @@ export default function App() {
                 <button
                   type="button"
                   aria-label="Back to top"
-                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                  onClick={() => window.scrollTo({ top: 0, behavior: scrollBehavior() })}
                   className="grid h-8 w-8 place-items-center rounded-full border border-ot-border transition-colors hover:text-ot-text"
                 >
                   <ArrowUp size={14} />

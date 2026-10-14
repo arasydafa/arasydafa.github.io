@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.11.1 — 2026-10-14
+- Reduce WHOA scroll trigger threshold sensitivity (8 → 12 px/ms)
+- Respect prefers-reduced-motion in all JS-driven smooth scroll calls
+- rAF-throttle ScrollBuddy scroll handler
+- Accessibility: role="group" on case stage tabs, remove unused variable in DetectionLab
+
 ## 1.11.0 — 2026-10-12
 - Download CV button in hero and contact, exports the live Google Doc as PDF
 - Dispatches sorted newest first by date, append freely and order stays correct
